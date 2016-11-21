@@ -98,20 +98,47 @@ input.border.bottom, button.border.bottom {
 /* Fonts */
 @font-face {
     font-family: OpenSans;
-    src: url('./fonts/OpenSans-Regular.ttf') format('truetype');
+    src: url('./fonts/opensans/OpenSans-Regular.ttf') format('truetype');
     font-weight: normal;
 }
 
 @font-face {
     font-family: OpenSans;
-    src: url('./fonts/OpenSans-Semibold.ttf') format('truetype');
+    src: url('./fonts/opensans/OpenSans-Semibold.ttf') format('truetype');
     font-weight: 600;
 }
 
 @font-face {
     font-family: exo2;
-    src: url('./fonts/Exo2-Regular.ttf') format('truetype');
+    src: url('./fonts/opensans/Exo2-Regular.ttf') format('truetype');
     font-weight: 600;
+}
+@font-face {
+    font-family: Roboto;
+    src: url('./fonts/roboto/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: Roboto;
+    src: url('./fonts/roboto/Roboto-LightItalic.ttf') format('truetype');
+    font-style: italic;
+    font-weight: normal;
+}
+@font-face {
+    font-family: Roboto;
+    src: url('./fonts/roboto/Roboto-MediumItalic.ttf') format('truetype');
+    font-style: italic;
+    font-weight: bold;
+}
+@font-face {
+    font-family: Roboto;
+    src: url('./fonts/roboto/Roboto-Medium.ttf') format('truetype');
+    font-weight: 600;
+}
+@font-face {
+    font-family: Roboto;
+    src: url('./fonts/roboto/Roboto-Bold.ttf') format('truetype');
+    font-weight: bold;
 }
 
 /* Profile Components */
@@ -215,7 +242,7 @@ input.border.bottom, button.border.bottom {
     color: #E83591;
     border: none;
     font-weight: bold;
-    padding: 10px;   
+    padding: 10px;
 }
 
 .navigationButtonPrev {
