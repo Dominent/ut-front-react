@@ -11,6 +11,7 @@ class LoginForm extends Component {
         this.onChange = this.onChange.bind(this);
 
         this.handleChange = debounce(this.handleChange, 100);
+
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -60,8 +61,7 @@ class LoginForm extends Component {
               buttons={[{label: buttonLabel, className: 'standardBtn loginBtn', type: 'submit'}]}
               onChange={this.onChange}
               onSubmit={this.onSubmit}
-              error={error}
-              invalidField={invalidField} />
+              error={error} />
         );
     }
 }
@@ -90,7 +90,6 @@ LoginForm.propTypes = {
     buttonLabel: PropTypes.string,
     error: PropTypes.string,
     shouldSubmit: PropTypes.bool,
-    invalidField: PropTypes.string,
     setInputValue: PropTypes.func.isRequired,
     validateForm: PropTypes.func.isRequired,
     identityCheck: PropTypes.func.isRequired
