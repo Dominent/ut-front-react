@@ -81,7 +81,8 @@ class TextField extends Component {
     get inputValue() {
         const { value } = this.state;
 
-        if (value === null || value === undefined || value === 'false') {
+        // fix display input value when value = 0
+        if (value === null || value === undefined || value === false) {
             return '';
         }
 
