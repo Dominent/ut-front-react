@@ -11,14 +11,25 @@ export default class Column extends Component {
             this.props.handleClick(this.props.data, this.props.field, value, this.props.recordIndex);
         };
     }
+
+    get reMapKey() {
+        const { data, field } = this.props;
+
+        if (data[field.name] !== null && data[field.name] !== undefined && data[field.name] !== false) {
+            return data[field.name];
+        }
+
+        return '';
+    }
+
     render() {
         if (this.props.field.visible === false) {
             return false;
         }
-        var reMapKey = this.props.data[this.props.field.name] || '';
-        var value = reMapKey;
+
+        var value = this.reMapKey;
         if (typeof (this.props.field.dataReMap) !== 'undefined') {
-            value = this.props.field.dataReMap[reMapKey];
+            value = this.props.field.dataReMap[this.reMapKey];
         }
 
         return (
