@@ -65,6 +65,17 @@ class PopupInternal extends Component {
         }
     }
 
+    get contentWidth() {
+        const { contentMaxWidth } = this.state;
+        var style = {
+            maxWidth: contentMaxWidth
+        };
+        if (this.props.fullWidth) {
+            style.minWidth = contentMaxWidth;
+        }
+        return style;
+    }
+
     render() {
         const {
             className,
@@ -77,14 +88,12 @@ class PopupInternal extends Component {
             closePopup
         } = this.props;
 
-        const { contentMaxWidth, contentMaxHeight } = this.state;
-
         return (
             <div className={styles.modalContainer}>
                 { hasOverlay && <div className={styles.modalOverlay} onClick={closeOnOverlayClick ? closePopup : null} /> }
-                <div style={{maxWidth: contentMaxWidth}} className={classnames(styles.popupContainer, className)}>
+                <div style={this.contentWidth} className={classnames(styles.popupContainer, className)}>
                     { header && <Header className={header.className} text={header.text} closePopup={closePopup} closeIcon={header.closeIcon} /> }
-                    <div style={{maxHeight: contentMaxHeight}} className={classnames(styles.popupContent, contentClassName)}>
+                    <div style={{maxHeight: this.state.contentMaxHeight}} className={classnames(styles.popupContent, contentClassName)}>
                         { children }
                     </div>
                     { footer && <Footer leftNode={footer.leftNode} className={footer.className} actionButtons={footer.actionButtons} /> }
@@ -116,11 +125,13 @@ PopupInternal.propTypes = {
         })),
         leftNode: PropTypes.node
     }),
+    fullWidth: PropTypes.bool,
     children: PropTypes.any,
     closePopup: PropTypes.func
 };
 
 PopupInternal.defaultProps = {
+    fullWidth: false,
     hasOverlay: true,
     container: 'controls',
     closeOnOverlayClick: false
@@ -166,11 +177,13 @@ Popup.propTypes = {
         })),
         leftNode: PropTypes.node
     }),
+    fullWidth: PropTypes.bool,
     children: PropTypes.any,
     closePopup: PropTypes.func
 };
 
 Popup.defaultProps = {
+    fullWidth: false,
     hasOverlay: true,
     container: 'controls',
     closeOnOverlayClick: false

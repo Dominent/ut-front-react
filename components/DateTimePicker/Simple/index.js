@@ -10,10 +10,11 @@ import style from './style.css';
 
 const noop = () => {};
 
-export default class DatePickerBetween extends Component {
+class DateTimePicker extends Component {
     constructor(props) {
         super(props);
-        this.state = props.defaultValue;
+
+        this.getDate = this.getDate.bind(this);
         this.handleAccept = this.handleAccept.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -22,16 +23,29 @@ export default class DatePickerBetween extends Component {
         this.getContextStyles = this.getContextStyles.bind(this);
 
         this.state = {
-            date: null
+            date: undefined
         };
     }
 
     componentWillMount() {
-        this.setState({date: this.props.defaultValue});
+        let date = this.getDate(this.props);
+
+        date && this.setState({
+            date: date
+        });
     }
 
     componentWillReceiveProps(newProps) {
-        this.setState({date: newProps.defaultValue});
+        let date = this.getDate(newProps);
+
+        date && this.setState({
+            date: date
+        });
+    }
+    getDate(props) {
+        return props.defaultValue
+            ? new Date(props.defaultValue)
+            : undefined;
     }
     handleOpen(ref) {
         return () => {
@@ -43,9 +57,10 @@ export default class DatePickerBetween extends Component {
             return '';
         }
 
-        let { locale, dateFormat } = this.props;
-        if (locale) {
-            return date.toLocaleDateString(locale, dateFormat);
+        let { locale, dateFormat, transformDate } = this.props;
+
+        if (transformDate) {
+            return transformDate(date, dateFormat, locale);
         }
 
         return formatIso(date);
@@ -55,25 +70,26 @@ export default class DatePickerBetween extends Component {
             return '';
         }
 
-        let { locale, timeFormat } = this.props;
-        if (locale) {
-            return time.toLocaleTimeString(locale, timeFormat);
-        }
-        let format = timeFormat && timeFormat.hour12 ? 'ampm' : '24hr';
+        let { locale, timeFormat, transformTime } = this.props;
 
-        return formatTime(time, format);
+        if (transformTime) {
+            return transformTime(time, timeFormat, locale);
+        }
+
+        return formatTime(time);
     }
     handleAccept(ref) {
+        let {date} = this.state;
         return (d) => {
-            let {date} = this.state;
             let newDate = new Date(d);
             if (ref === 'date') {
                 if (date && !isNaN(date.valueOf())) {
                     if (isNaN(newDate.valueOf())) {
-                        newDate = null;
+                        newDate = undefined;
                     } else {
                         newDate.setHours(date.getHours());
                         newDate.setMinutes(date.getMinutes());
+                        newDate.setSeconds(date.getSeconds());
                     }
                 }
             } else if (ref === 'time') {
@@ -92,14 +108,21 @@ export default class DatePickerBetween extends Component {
             } else {
                 return;
             }
-
-            newDate = (newDate && !isNaN(newDate.valueOf())) ? newDate : null;
-
             this.setState({
                 date: newDate
             });
+
             if (this.props.onChange) {
-                this.props.onChange({value: newDate});
+                newDate = (newDate && !isNaN(newDate.valueOf()))
+                ? (new Date(newDate.getTime() - newDate.getTimezoneOffset() * 60 * 1000))
+                        .toISOString()
+                        .replace('T', ' ')
+                        .substr(0, 23)
+                : undefined;
+
+                this.props.onChange({
+                    value: newDate
+                });
             }
         };
     }
@@ -121,7 +144,7 @@ export default class DatePickerBetween extends Component {
         let outerWrapStyle = label ? style.outerWrap : style.outerWrapNoLabel;
         let boldLabelStyle = boldLabel ? style.boldLabel : '';
 
-        let format = timeFormat.hour12 ? 'ampm' : '24hr';
+        let format = timeFormat.indexOf('HH') > -1 ? '24hr' : 'ampm';
 
         return (
             <div className={outerWrapStyle}>
@@ -135,39 +158,38 @@ export default class DatePickerBetween extends Component {
                         <input value={date ? this.formatTime(date) : ''} type='text' onChange={noop} onKeyUp={this.handleKeyPress('time')} />
                         <button className={style.timeButton} onClick={this.handleOpen('time')} />
                     </div>
+                    <DatePickerDialog
+                      cancelLabel={cancelLabel}
+                      okLabel={okLabel}
+                      container={container}
+                      initialDate={date}
+                      mode={mode}
+                      onAccept={this.handleAccept('date')}
+                      firstDayOfWeek={firstDayOfWeek}
+                      ref='date' />
+                    <TimePickerDialog
+                      cancelLabel={cancelLabel}
+                      okLabel={okLabel}
+                      initialTime={date}
+                      mode={mode}
+                      onAccept={this.handleAccept('time')}
+                      format={format}
+                      ref='time' />
                 </div>
-                <DatePickerDialog
-                  cancelLabel={cancelLabel}
-                  okLabel={okLabel}
-                  container={container}
-                  initialDate={date || new Date()}
-                  mode={mode}
-                  onAccept={this.handleAccept('date')}
-                  firstDayOfWeek={firstDayOfWeek}
-                  ref='date' />
-                <TimePickerDialog
-                  cancelLabel={cancelLabel}
-                  okLabel={okLabel}
-                  initialTime={date || new Date()}
-                  mode={mode}
-                  onAccept={this.handleAccept('time')}
-                  firstDayOfWeek={firstDayOfWeek}
-                  format={format}
-                  ref='time' />
             </div>
         );
     }
 }
 
-DatePickerBetween.defaultProps = {
+DateTimePicker.defaultProps = {
     firstDayOfWeek: 1,
     mode: 'landscape',
     container: 'dialog',
-    timeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-    dateFormat: { day: 'numeric', month: 'numeric', year: 'numeric' }
+    timeFormat: 'HH:mm',
+    dateFormat: 'YYYY-MM-DD'
 };
-DatePickerBetween.propTypes = {
-    defaultValue: PropTypes.object,
+DateTimePicker.propTypes = {
+    defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
     locale: PropTypes.string,
     okLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     cancelLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -175,12 +197,16 @@ DatePickerBetween.propTypes = {
     container: PropTypes.oneOf(['dialog', 'inline']),
     mode: PropTypes.oneOf(['landscape', 'portrait']),
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    timeFormat: PropTypes.object,
-    dateFormat: PropTypes.object,
+    timeFormat: PropTypes.string,
+    dateFormat: PropTypes.string,
     onChange: PropTypes.func,
-    boldLabel: PropTypes.bool
+    boldLabel: PropTypes.bool,
+    transformDate: PropTypes.func,
+    transformTime: PropTypes.func
 };
 
-DatePickerBetween.contextTypes = {
+DateTimePicker.contextTypes = {
     implementationStyle: PropTypes.object
 };
+
+export default DateTimePicker;

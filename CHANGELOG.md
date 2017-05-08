@@ -1,3 +1,69 @@
+<a name="9.0.9"></a>
+## [9.0.9](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.8...v9.0.9) (2017-05-05)
+
+
+
+<a name="9.0.8"></a>
+## [9.0.8](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.7...v9.0.8) (2017-05-05)
+
+
+
+<a name="9.0.7"></a>
+## [9.0.7](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.6...v9.0.7) (2017-05-04)
+
+
+
+<a name="9.0.6"></a>
+## [9.0.6](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.5...v9.0.6) (2017-05-03)
+
+
+### Bug Fixes
+
+* date picker support in grid toolbox ([00545df](https://github.com/softwaregroup-bg/ut-front-react/commit/00545df))
+
+
+
+<a name="9.0.5"></a>
+## [9.0.5](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.4...v9.0.5) (2017-05-02)
+
+
+### Bug Fixes
+
+* date format in tooltip ([52d5d54](https://github.com/softwaregroup-bg/ut-front-react/commit/52d5d54))
+* display filter value correctly ([552318f](https://github.com/softwaregroup-bg/ut-front-react/commit/552318f))
+* external datetime transform functions && accept friendlier format ([eb1aa0d](https://github.com/softwaregroup-bg/ut-front-react/commit/eb1aa0d))
+* handle timezones ([b6c2934](https://github.com/softwaregroup-bg/ut-front-react/commit/b6c2934))
+* refactor component styles ([71f5d2f](https://github.com/softwaregroup-bg/ut-front-react/commit/71f5d2f))
+* remove redundant property ([1c25d0d](https://github.com/softwaregroup-bg/ut-front-react/commit/1c25d0d))
+* revert timezone handle ([cdf3320](https://github.com/softwaregroup-bg/ut-front-react/commit/cdf3320))
+
+
+
+<a name="9.0.4"></a>
+## [9.0.4](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.3...v9.0.4) (2017-05-02)
+
+
+### Bug Fixes
+
+* ut-tools version - any ([e6b3b5a](https://github.com/softwaregroup-bg/ut-front-react/commit/e6b3b5a))
+
+
+
+<a name="9.0.3"></a>
+## [9.0.3](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.2...v9.0.3) (2017-05-02)
+
+
+
+<a name="9.0.2"></a>
+## [9.0.2](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.1...v9.0.2) (2017-04-27)
+
+
+
+<a name="9.0.1"></a>
+## [9.0.1](https://github.com/softwaregroup-bg/ut-front-react/compare/v9.0.0...v9.0.1) (2017-04-27)
+
+
+
 <a name="9.0.0"></a>
 # [9.0.0](https://github.com/softwaregroup-bg/ut-front-react/compare/v8.19.14...v9.0.0) (2017-04-24)
 

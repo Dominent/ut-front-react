@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 import Dropdown from '../Input/Dropdown';
 import Input from '../Input/TextField';
 import SearchBox from '../SearchBox';
+import DatePicker from './../DatePicker/Simple';
 import DatePickerBetween from './../DatePicker/Between';
 import DateTimePickerBetween from '../DateTimePicker/Between';
 import ConfirmDialog from '../ConfirmDialog';
@@ -21,8 +22,8 @@ import style from './style.css';
 const dropDrownAllOptionKey = '__all__';
 const dropDrownPlaceholderOptionKey = '__placeholder__';
 
-const defaultTimeFormat = { hour: '2-digit', minute: '2-digit', hour12: false };
-const defaultDateFormat = { day: 'numeric', month: 'numeric', year: 'numeric' };
+const defaultTimeFormat = 'HH:mm';
+const defaultDateFormat = 'YYYY-MM-DD';
 
 class GridToolBox extends Component {
     constructor(props) {
@@ -96,16 +97,14 @@ class GridToolBox extends Component {
         let filterValue;
 
         if (filterElement.type === filterElementTypes.datePickerBetween || filterElement.type === filterElementTypes.dateTimePickerBetween) {
-            let filterStateEmpty = true;
-            Object.keys(filterElement.name).forEach(k => {
-                filterStateEmpty = filterStateEmpty && !filters.hasOwnProperty(filterElement.name[k]);
-            });
-            filterValue = filterStateEmpty
-                ? filterElement.defaultValue
-                : {
-                    from: filters[filterElement.name.from],
-                    to: filters[filterElement.name.to]
-                };
+            filterValue = {
+                from: filters.hasOwnProperty(filterElement.name.from)
+                    ? filters[filterElement.name.from]
+                    : filterElement.defaultValue['from'],
+                to: filters.hasOwnProperty(filterElement.name.to)
+                    ? filters[filterElement.name.to]
+                    : filterElement.defaultValue['to']
+            };
         } else {
             filterValue = (filters.hasOwnProperty(filterElement.name))
                 ? filters[filterElement.name]
@@ -155,6 +154,22 @@ class GridToolBox extends Component {
                               onChange(filterElement.name, e.target.value);
                           }} />
                     </div>);
+            case filterElementTypes.datePicker:
+                return (<div>
+                        <DatePicker
+                          onChange={filterAutoFetch && !renderInDialog
+                                ? filterElement.onChange
+                                : function(obj) {
+                                    onChange(filterElement.name, obj.value);
+                                }
+                            }
+                          withVerticalClass={renderInDialog}
+                          locale={filterElement.locale}
+                          defaultValue={filterValue}
+                          label={filterElement.label}
+                          boldLabel={renderInDialog} />
+                    </div>);
+
             case filterElementTypes.datePickerBetween:
                 return (<div>
                             <DatePickerBetween
@@ -166,6 +181,7 @@ class GridToolBox extends Component {
                               withVerticalClass={renderInDialog}
                               defaultValue={filterValue}
                               dateFormat={filterElement.dateFormat || defaultDateFormat}
+                              transformDate={filterElement.transformDate}
                               locale={filterElement.locale}
                               masterLabel={filterElement.masterLabel}
                               labelFrom={filterElement.labelFrom}
@@ -184,6 +200,8 @@ class GridToolBox extends Component {
                               defaultValue={filterValue}
                               timeFormat={filterElement.timeFormat || defaultTimeFormat}
                               dateFormat={filterElement.dateFormat || defaultDateFormat}
+                              transformDate={filterElement.transformDate}
+                              transformTime={filterElement.transformTime}
                               locale={filterElement.locale}
                               labelFrom={filterElement.labelFrom}
                               labelTo={filterElement.labelTo}
@@ -249,11 +267,14 @@ class GridToolBox extends Component {
                         let dateValue;
                         let timeValue;
 
-                        if (filter.locale) {
-                            dateValue = date.toLocaleDateString(filter.locale, dateFormat);
-                            timeValue = date.toLocaleTimeString(filter.locale, timeFormat);
+                        if (filter.transformDate) {
+                            dateValue = filter.transformDate(date, dateFormat, filter.locale);
                         } else {
                             dateValue = formatIso(date);
+                        }
+                        if (filter.transformTime) {
+                            timeValue = filter.transformTime(date, timeFormat, filter.locale);
+                        } else {
                             timeValue = formatTime(date);
                         }
 
@@ -636,6 +657,7 @@ GridToolBox.propTypes = {
             type: PropTypes.oneOf([
                 filterElementTypes.dropDown,
                 filterElementTypes.searchBox,
+                filterElementTypes.datePicker,
                 filterElementTypes.datePickerBetween,
                 filterElementTypes.dateTimePickerBetween,
                 filterElementTypes.clear
