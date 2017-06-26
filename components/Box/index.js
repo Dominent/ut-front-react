@@ -4,7 +4,13 @@ import Glyphicon from '../Glyphicon';
 import style from './style.css';
 import classnames from 'classnames';
 
-const Box = ({ children, className, title, externalTitleClasses, externalBodyClasses, titleType, showClose, fullWidth, minHeight, transparent, marginBottom = true, onClose, showAccordeon = false, collapsed = false, onToggle, arrowDirection, ...props }) => {
+const Box = ({ children, className, title, externalTitleClasses,
+    externalBodyClasses, titleType, showClose, fullWidth, minHeight,
+    transparent, onClose, onToggle, marginBottom = true, showAccordeon = false,
+    collapsed = false, arrowDirection = {
+        collapsed: 'arrowDown',
+        expanded: 'arrowUp'
+    }, ...props }) => {
     let titleTypeClass;
     switch (titleType) {
         case 'small':
@@ -12,13 +18,6 @@ const Box = ({ children, className, title, externalTitleClasses, externalBodyCla
             break;
         default:
             titleTypeClass = classnames('f20', 'f-semibold', 'padding-all-20');
-    }
-
-    if (!arrowDirection) {
-        arrowDirection = {
-            collapsed: 'arrowDown',
-            expanded: 'arrowUp'
-        }
     }
 
     let accordeonDirection = collapsed ? arrowDirection.collapsed : arrowDirection.expanded;
@@ -60,7 +59,11 @@ Box.propTypes = {
     className: PropTypes.string,
     externalTitleClasses: PropTypes.string,
     externalBodyClasses: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    arrowDirection: PropTypes.shape({
+        collapsed: PropTypes.string,
+        expanded: PropTypes.number
+    })
 };
 
 export default Box;
